@@ -1,7 +1,14 @@
-apriltags-cpp
+apriltags-cpp(Windows)
 =============
 
 C++ port of the APRIL tags library, using OpenCV (and optionally, CGAL).
+
+
+Update
+============
+P-Chao 2018 
+* 20181123 build apriltags-cpp for windows
+
 
 Requirements
 ============

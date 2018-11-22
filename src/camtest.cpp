@@ -7,8 +7,11 @@
  ********************************************************************/
 
 #include "TagDetector.h"
-
+#ifdef __linux__
 #include <sys/time.h>
+#elif _WIN32
+#include <time.h>
+#endif
 #include <iostream>
 #include <stdio.h>
 #include <getopt.h>

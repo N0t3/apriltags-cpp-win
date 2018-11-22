@@ -21,8 +21,11 @@ find_library(GLUT_LIBRARY glut)
 
 include(FindPkgConfig)
 
-pkg_search_module(OPENCV REQUIRED opencv>=2.3 opencv-2.3.1)
-include_directories(${OPENCV_INCLUDE_DIRS})
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+add_definitions(-DNOMINMAX -DHAVE_OPENCV)
+#pkg_search_module(OPENCV REQUIRED opencv>=2.3 opencv-2.3.1)
+#include_directories(${OPENCV_INCLUDE_DIRS})
 
 pkg_check_modules(CAIRO cairo)
 
@@ -40,19 +43,10 @@ else()
   message("CGAL not found, can not use new quad detector")
 endif()
 
-set(CMAKE_C_FLAGS "-Wall -g")
-set(CMAKE_CXX_FLAGS "-Wall -g")
-
 if (APPLE OR UNIX)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wsign-compare -frounding-math")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wsign-compare -frounding-math")
 endif()
-
-set(CMAKE_C_FLAGS_DEBUG "-O")
-set(CMAKE_CXX_FLAGS_DEBUG "-O")
-
-set(CMAKE_C_FLAGS_RELEASE "-O2")
-set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 
 add_subdirectory(src)
 

@@ -750,8 +750,8 @@ void TagDetector::refineQuadL(const Images& images,
   if (debug && 0) {
 
     cv::Mat_<cv::Vec3b> rgbu = images.origRGB/2 + 127;
-    cv::Mat_<cv::Vec3b> small(rgbu, r);
-    int scl = resizeToDisplay(small, small);
+    cv::Mat_<cv::Vec3b> ssmall(rgbu, r);
+    int scl = resizeToDisplay(ssmall, ssmall);
 
     at::Point delta = at::Point(-r.x, -r.y);
     at::Point lx(0.2*scl, 0);
@@ -763,12 +763,12 @@ void TagDetector::refineQuadL(const Images& images,
 
       const cv::Scalar& color = ccolors[ i % ccolors.size() ];
 
-      cv::line( small, 
+      cv::line( ssmall, 
                 (dsegs[i].p+delta)*scl, 
                 (dsegs[i].p+delta+dsegs[i].length*dsegs[i].t)*scl, 
                 color, 1, CV_AA );
 
-      cv::line( small, 
+      cv::line( ssmall, 
                 (quad.p[i]+delta)*scl, 
                 (quad.p[(i+1)%4]+delta)*scl, 
                 color, 2, CV_AA );
@@ -777,9 +777,9 @@ void TagDetector::refineQuadL(const Images& images,
       for (size_t j=0; j<xywarrays[i].size(); ++j) {
         const XYW& pj = xywarrays[i][j];
         at::Point p = (at::Point(pj.x, pj.y) + delta)*scl;
-        cv::line( small, p-lx, p+lx, color, 1, CV_AA);
+        cv::line( ssmall, p-lx, p+lx, color, 1, CV_AA);
         if (pj.w > 0) {
-          cv::line( small, p-ly, p+ly, color, 1, CV_AA);
+          cv::line( ssmall, p-ly, p+ly, color, 1, CV_AA);
         }
       }
     }
@@ -787,7 +787,7 @@ void TagDetector::refineQuadL(const Images& images,
     emitDebugImage(debugWindowName, 
                    8, 0, debugNumberFiles,
                    "refineQuadL",
-                   small, ScaleNone, false);
+                   ssmall, ScaleNone, false);
     
 
   }
@@ -842,16 +842,16 @@ void TagDetector::getQuads_AT(const Images& images,
   }
 
   if (params.segDecimate) {
-    at::Mat small(fimseg.rows/2, fimseg.cols/2);
-    for (int y=0; y<small.rows; ++y) {
-      for (int x=0; x<small.cols; ++x) {
-        small(y,x) = 0.25 * ( fimseg(2*y+0, 2*x+0) +
+    at::Mat ssmall(fimseg.rows/2, fimseg.cols/2);
+    for (int y=0; y<ssmall.rows; ++y) {
+      for (int x=0; x<ssmall.cols; ++x) {
+        ssmall(y,x) = 0.25 * ( fimseg(2*y+0, 2*x+0) +
                               fimseg(2*y+0, 2*x+1) +
                               fimseg(2*y+1, 2*x+0) + 
                               fimseg(2*y+1, 2*x+1) );
       }
     }
-    fimseg = small;
+    fimseg = ssmall;
   }
 
   at::Mat fimTheta( fimseg.size() );
@@ -1613,7 +1613,7 @@ void TagDetector::refineQuadLSQ(const Images& images,
     cv::Mat_<cv::Vec3b> rgbu = images.origRGB/2 + 127;
 
     cv::Rect rect = boundingRect(quad.p, rgbu.size());
-    cv::Mat_<cv::Vec3b> small = subimageWithBorder(rgbu, rect, border);
+    cv::Mat_<cv::Vec3b> ssmall = subimageWithBorder(rgbu, rect, border);
 
     at::Point delta = at::Point(border-rect.x, border-rect.y);
     
@@ -1631,9 +1631,9 @@ void TagDetector::refineQuadLSQ(const Images& images,
         if (f > 1) { f = 1; }
         int x = pj.x + delta.x;
         int y = pj.y + delta.y;
-        if (x >= 0 && x < small.cols &&
-            y >= 0 && y < small.rows) {
-          small(y, x) = (1-f)*small(y, x) + f*vc;
+        if (x >= 0 && x < ssmall.cols &&
+            y >= 0 && y < ssmall.rows) {
+          ssmall(y, x) = (1-f)*ssmall(y, x) + f*vc;
         }
       }
         
@@ -1642,7 +1642,7 @@ void TagDetector::refineQuadLSQ(const Images& images,
     emitDebugImage(debugWindowName,
                    7, 0, debugNumberFiles,
                    "Quad clusters",
-                   small, ScaleNone, true);
+                   ssmall, ScaleNone, true);
 
   }
   
@@ -1710,12 +1710,12 @@ void TagDetector::debugShowQuads(const Images& images,
       cv::Rect rect = boundingRect(quad.p, rgbu.size());
       int border = 3;
 
-      cv::Mat small = subimageWithBorder(rgbu, rect, border);
+      cv::Mat ssmall = subimageWithBorder(rgbu, rect, border);
 
       at::Point delta = at::Point(border-rect.x, border-rect.y);
 
       cv::Mat big;
-      at::real scl = resizeToDisplay(small, big);
+      at::real scl = resizeToDisplay(ssmall, big);
 
       for (int j=0; j<4; ++j) {
         cv::line(big, (quad.p[j]+delta)*scl, (quad.p[(j+1)%4]+delta)*scl, 

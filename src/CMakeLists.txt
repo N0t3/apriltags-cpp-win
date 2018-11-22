@@ -1,5 +1,8 @@
-add_library(apriltags
-  CameraUtil.cpp
+
+#file(GLOB SRC_LIST "*.cpp")
+file(GLOB INC_LIST "*.h")
+include_directories(.)
+add_library(apriltags ${INC_LIST} CameraUtil.cpp
   DebugImage.cpp
   Geometry.cpp 
   GrayModel.cpp
@@ -9,9 +12,9 @@ add_library(apriltags
   TagFamily.cpp
   TagFamilies.cpp
   UnionFindSimple.cpp
-)
+  getopt.cpp)
 
-set(AT_LIBS apriltags ${OPENCV_LDFLAGS})
+set(AT_LIBS apriltags ${OpenCV_LIBS})
 
 target_link_libraries(apriltags ${AT_LIBS})
 

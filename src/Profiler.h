@@ -10,7 +10,16 @@
 #define _PROFILER_H_
 
 #include <map>
+#ifdef __linux__
 #include <sys/time.h>
+#else
+#ifdef WIN32
+#include <time.h>
+#include <Windows.h>
+int gettimeofday(struct timeval *tp, void *tzp);
+#endif
+
+#endif
 
 // Lightweight classes/structs used for profiling AprilTags.
 

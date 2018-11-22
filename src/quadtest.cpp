@@ -13,12 +13,15 @@
 #include <iostream>
 #include <iomanip>
 #include <stdlib.h>
+#ifdef __linux__
 #include <sys/time.h>
+#endif
 #include <time.h>
 
 #include "Geometry.h"
 #include "TagDetector.h"
 #include "Refine.h"
+#include "MathUtil.h"
 
 enum {
   test_img_w = 30,
@@ -28,10 +31,10 @@ enum {
 };
 
 cv::Mat shrink(const cv::Mat& image, int scl) {
-  cv::Mat small;
-  cv::resize(image, small, cv::Size(image.cols/scl, image.rows/scl), 0, 0,
+  cv::Mat ssmall;
+  cv::resize(image, ssmall, cv::Size(image.cols/scl, image.rows/scl), 0, 0,
              CV_INTER_AREA);
-  return small;
+  return ssmall;
 }
 
 cv::Mat addNoise(const cv::Mat& src, cv::RNG& rng, double stddev) {
@@ -74,7 +77,7 @@ cv::Mat addNoise(const cv::Mat& src, cv::RNG& rng, double stddev) {
 size_t fakeDetectionImage(const TagFamily& tagFamily,
                           cv::RNG& rng,
                           at::Point p[4],
-                          cv::Mat& small) {
+                          cv::Mat& ssmall) {
 
   const int dx[4] = { -1, 1,  1, -1 };
   const int dy[4] = {  1, 1, -1, -1 };
@@ -128,7 +131,7 @@ size_t fakeDetectionImage(const TagFamily& tagFamily,
                                                   test_img_scl*test_img_h), 
                                          CV_8UC3, CV_RGB(255,255,255));
   
-  small = addNoise(shrink(big, test_img_scl), rng, 10);
+  ssmall = addNoise(shrink(big, test_img_scl), rng, 10);
 
   for (int i=0; i<4; ++i) {
     p[i] *= (1.0/test_img_scl);
@@ -180,12 +183,12 @@ int main(int argc, char** argv) {
     TagDetection d;
 
     at::Point p[4];
-    cv::Mat small;
+    cv::Mat ssmall;
 
-    fakeDetectionImage(tagFamily, rng, p, small);
+    fakeDetectionImage(tagFamily, rng, p, ssmall);
 
     cv::Mat_<unsigned char> gsmall;
-    cv::cvtColor(small, gsmall, CV_RGB2GRAY);
+    cv::cvtColor(ssmall, gsmall, CV_RGB2GRAY);
 
     at::Mat gx = at::Mat::zeros(gsmall.size());
     at::Mat gy = at::Mat::zeros(gsmall.size());
