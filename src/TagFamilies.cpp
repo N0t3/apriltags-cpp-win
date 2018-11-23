@@ -10,6 +10,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdlib.h>
+#include <opencv2/imgproc/imgproc_c.h>
 
 namespace {
 

@@ -8,6 +8,7 @@
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgproc/imgproc_c.h>
 
 #include <vector>
 #include <iostream>
@@ -33,7 +34,7 @@ enum {
 cv::Mat shrink(const cv::Mat& image, int scl) {
   cv::Mat ssmall;
   cv::resize(image, ssmall, cv::Size(image.cols/scl, image.rows/scl), 0, 0,
-             CV_INTER_AREA);
+             cv::INTER_AREA);
   return ssmall;
 }
 

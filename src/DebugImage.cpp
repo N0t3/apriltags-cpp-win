@@ -11,6 +11,7 @@
 
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc_c.h>
 #ifdef _WIN32
 #include "Profiler.h"
 int gettimeofday(struct timeval *tp, void *tzp)

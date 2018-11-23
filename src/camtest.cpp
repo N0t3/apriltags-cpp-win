@@ -19,6 +19,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgproc/imgproc_c.h>
+#include <opencv2/videoio.hpp>
 
 #include "CameraUtil.h"
 
@@ -154,15 +156,15 @@ int main(int argc, char** argv) {
   if (opts.frame_width && opts.frame_height) {
 
     // Use uvcdynctrl to figure this out dynamically at some point?
-    vc.set(CV_CAP_PROP_FRAME_WIDTH, opts.frame_width);
-    vc.set(CV_CAP_PROP_FRAME_HEIGHT, opts.frame_height);
+    vc.set(cv::CAP_PROP_FRAME_WIDTH, opts.frame_width);
+    vc.set(cv::CAP_PROP_FRAME_HEIGHT, opts.frame_height);
     
 
   }
 
   std::cout << "Set camera to resolution: "
-            << vc.get(CV_CAP_PROP_FRAME_WIDTH) << "x"
-            << vc.get(CV_CAP_PROP_FRAME_HEIGHT) << "\n";
+            << vc.get(cv::CAP_PROP_FRAME_WIDTH) << "x"
+            << vc.get(cv::CAP_PROP_FRAME_HEIGHT) << "\n";
 
   cv::Mat frame;
   cv::Point2d opticalCenter;
