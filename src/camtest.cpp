@@ -15,6 +15,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <getopt.h>
+#include "Geometry.h"
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
@@ -27,36 +28,36 @@
 #define DEFAULT_TAG_FAMILY "Tag36h11"
 
 typedef struct CamTestOptions {
-  CamTestOptions() :
-      params(),
-      family_str(DEFAULT_TAG_FAMILY),
-      error_fraction(1),
-      device_num(0),
-      focal_length(500),
-      tag_size(0.1905),
-      frame_width(0),
-      frame_height(0),
-      mirror_display(true)
-  {
-  }
-  TagDetectorParams params;
-  std::string family_str;
-  double error_fraction;
-  int device_num;
-  double focal_length;
-  double tag_size;
-  int frame_width;
-  int frame_height;
-  bool mirror_display;
+    CamTestOptions() :
+        params(),
+        family_str(DEFAULT_TAG_FAMILY),
+        error_fraction(1),
+        device_num(0),
+        focal_length(500),
+        tag_size(0.1905),
+        frame_width(0),
+        frame_height(0),
+        mirror_display(true)
+    {
+    }
+    TagDetectorParams params;
+    std::string family_str;
+    double error_fraction;
+    int device_num;
+    double focal_length;
+    double tag_size;
+    int frame_width;
+    int frame_height;
+    bool mirror_display;
 } CamTestOptions;
 
 
-void print_usage(const char* tool_name, FILE* output=stderr) {
+void print_usage(const char* tool_name, FILE* output = stderr) {
 
-  TagDetectorParams p;
-  CamTestOptions o;
+    TagDetectorParams p;
+    CamTestOptions o;
 
-  fprintf(output, "\
+    fprintf(output, "\
 Usage: %s [OPTIONS]\n\
 Run a tool to test tag detection. Options:\n\
  -h              Show this help message.\n\
@@ -78,251 +79,268 @@ Run a tool to test tag detection. Options:\n\
  -W WIDTH        Set the camera image width in pixels\n\
  -H HEIGHT       Set the camera image height in pixels\n\
  -M              Toggle display mirroring\n",
-          tool_name,
-          p.sigma,
-          p.segSigma,
-          p.thetaThresh,
-          p.magThresh,
-          p.adaptiveThresholdValue,
-          p.adaptiveThresholdRadius,
-          DEFAULT_TAG_FAMILY,
-          o.error_fraction,
-          o.device_num,
-          o.focal_length,
-          o.tag_size);
+        tool_name,
+        p.sigma,
+        p.segSigma,
+        p.thetaThresh,
+        p.magThresh,
+        p.adaptiveThresholdValue,
+        p.adaptiveThresholdRadius,
+        DEFAULT_TAG_FAMILY,
+        o.error_fraction,
+        o.device_num,
+        o.focal_length,
+        o.tag_size);
 
-
-  fprintf(output, "Known tag families:");
-  TagFamily::StringArray known = TagFamily::families();
-  for (size_t i = 0; i < known.size(); ++i) {
-    fprintf(output, " %s", known[i].c_str());
-  }
-  fprintf(output, "\n");
+    fprintf(output, "Known tag families:");
+    TagFamily::StringArray known = TagFamily::families();
+    for (size_t i = 0; i < known.size(); ++i) {
+        fprintf(output, " %s", known[i].c_str());
+    }
+    fprintf(output, "\n");
 }
 
 CamTestOptions parse_options(int argc, char** argv) {
-  CamTestOptions opts;
-  const char* options_str = "hDS:s:a:m:V:N:brnf:e:d:F:z:W:H:M";
-  int c;
-  while ((c = getopt(argc, argv, options_str)) != -1) {
-    switch (c) {
-      // Reminder: add new options to 'options_str' above and print_usage()!
-      case 'h': print_usage(argv[0], stdout); exit(0); break;
-      case 'D': opts.params.segDecimate = true; break;
-      case 'S': opts.params.sigma = atof(optarg); break;
-      case 's': opts.params.segSigma = atof(optarg); break;
-      case 'a': opts.params.thetaThresh = atof(optarg); break;
-      case 'm': opts.params.magThresh = atof(optarg); break;
-      case 'V': opts.params.adaptiveThresholdValue = atof(optarg); break;
-      case 'N': opts.params.adaptiveThresholdRadius = atoi(optarg); break;
-      case 'b': opts.params.refineBad = true; break;
-      case 'r': opts.params.refineQuads = true; break;
-      case 'n': opts.params.newQuadAlgorithm = true; break;
-      case 'f': opts.family_str = optarg; break;
-      case 'e': opts.error_fraction = atof(optarg); break;
-      case 'd': opts.device_num = atoi(optarg); break;
-      case 'F': opts.focal_length = atof(optarg); break;
-      case 'z': opts.tag_size = atof(optarg); break;
-      case 'W': opts.frame_width = atoi(optarg); break;
-      case 'H': opts.frame_height = atoi(optarg); break;
-      case 'M': opts.mirror_display = !opts.mirror_display; break;
-      default:
-        fprintf(stderr, "\n");
-        print_usage(argv[0], stderr);
-        exit(1);
+    CamTestOptions opts;
+    const char* options_str = "hDS:s:a:m:V:N:brnf:e:d:F:z:W:H:M";
+    int c;
+    while ((c = getopt(argc, argv, options_str)) != -1) {
+        switch (c) {
+            // Reminder: add new options to 'options_str' above and print_usage()!
+        case 'h': print_usage(argv[0], stdout); exit(0); break;
+        case 'D': opts.params.segDecimate = true; break;
+        case 'S': opts.params.sigma = atof(optarg); break;
+        case 's': opts.params.segSigma = atof(optarg); break;
+        case 'a': opts.params.thetaThresh = atof(optarg); break;
+        case 'm': opts.params.magThresh = atof(optarg); break;
+        case 'V': opts.params.adaptiveThresholdValue = atof(optarg); break;
+        case 'N': opts.params.adaptiveThresholdRadius = atoi(optarg); break;
+        case 'b': opts.params.refineBad = true; break;
+        case 'r': opts.params.refineQuads = true; break;
+        case 'n': opts.params.newQuadAlgorithm = true; break;
+        case 'f': opts.family_str = optarg; break;
+        case 'e': opts.error_fraction = atof(optarg); break;
+        case 'd': opts.device_num = atoi(optarg); break;
+        case 'F': opts.focal_length = atof(optarg); break;
+        case 'z': opts.tag_size = atof(optarg); break;
+        case 'W': opts.frame_width = atoi(optarg); break;
+        case 'H': opts.frame_height = atoi(optarg); break;
+        case 'M': opts.mirror_display = !opts.mirror_display; break;
+        default:
+            fprintf(stderr, "\n");
+            print_usage(argv[0], stderr);
+            exit(1);
+        }
     }
-  }
-  opts.params.adaptiveThresholdRadius += (opts.params.adaptiveThresholdRadius+1) % 2;
-  return opts;
+    opts.params.adaptiveThresholdRadius += (opts.params.adaptiveThresholdRadius + 1) % 2;
+    return opts;
 }
 
 int main(int argc, char** argv) {
 
-  CamTestOptions opts = parse_options(argc, argv);
+    //creates new opject in CamTestOptions to start parsing for apriltags via camera
+    CamTestOptions opts = parse_options(argc, argv);
 
-  TagFamily family(opts.family_str);
+    TagFamily family(opts.family_str);
 
-  if (opts.error_fraction >= 0 && opts.error_fraction <= 1) {
-    family.setErrorRecoveryFraction(opts.error_fraction);
-  }
+    if (opts.error_fraction >= 0 && opts.error_fraction <= 1) {
+        family.setErrorRecoveryFraction(opts.error_fraction);
+    }
 
-  std::cout << "family.minimumHammingDistance = " << family.minimumHammingDistance << "\n";
-  std::cout << "family.errorRecoveryBits = " << family.errorRecoveryBits << "\n";
-  
 
-  cv::VideoCapture vc;
-  vc.open(opts.device_num);
+    //prints the minimum hamming distance between any two codes. recover (minHammingDistance - 1) / 2 bit errors
+    std::cout << "family.minimumHammingDistance = " << family.minimumHammingDistance << "\n";
 
-  if (opts.frame_width && opts.frame_height) {
+    //prints 
+    std::cout << "family.errorRecoveryBits = " << family.errorRecoveryBits << "\n";
 
-    // Use uvcdynctrl to figure this out dynamically at some point?
-    vc.set(cv::CAP_PROP_FRAME_WIDTH, opts.frame_width);
-    vc.set(cv::CAP_PROP_FRAME_HEIGHT, opts.frame_height);
-    
+    //OpenCv Class for video capture 
+    cv::VideoCapture vc;
 
-  }
+    //Opens Camera for video dections and creates new object to start parseing image files  
+    vc.open(opts.device_num);
 
-  std::cout << "Set camera to resolution: "
-            << vc.get(cv::CAP_PROP_FRAME_WIDTH) << "x"
-            << vc.get(cv::CAP_PROP_FRAME_HEIGHT) << "\n";
+    //gets both the frame width and frame height through camera 
+    if (opts.frame_width && opts.frame_height) {
 
-  cv::Mat frame;
-  cv::Point2d opticalCenter;
+        // Use uvcdynctrl to figure this out dynamically at some point?
+        vc.set(cv::CAP_PROP_FRAME_WIDTH, opts.frame_width);
+        vc.set(cv::CAP_PROP_FRAME_HEIGHT, opts.frame_height);
+    }
 
-  vc >> frame;
-  if (frame.empty()) {
-    std::cerr << "no frames!\n";
-    exit(1);
-  }
+    //displays camera resolution 
+    std::cout << "Set camera to resolution: "
+        << vc.get(cv::CAP_PROP_FRAME_WIDTH) << "x"
+        << vc.get(cv::CAP_PROP_FRAME_HEIGHT) << "\n";
 
-  opticalCenter.x = frame.cols * 0.5;
-  opticalCenter.y = frame.rows * 0.5;
+    //creates dens array for camera frame 
+    cv::Mat frame;
 
-  std::string win = "Cam tag test";
+    cv::Point2d opticalCenter;
 
-  TagDetectorParams& params = opts.params;
-  TagDetector detector(family, params);
-  
-  TagDetectionArray detections;
-
-  int cvPose = 0;
-  
-  while (1) {
-
+    //Stream operator to read the next frame 
     vc >> frame;
-    if (frame.empty()) { break; }
+    if (frame.empty()) {
+        std::cerr << "no frames!\n";
+        exit(1);
+    }
 
-    detector.process(frame, opticalCenter, detections);
+    //implements the x and y homographic tag size 
+    opticalCenter.x = frame.cols * 0.5;
+    opticalCenter.y = frame.rows * 0.5;
 
-    cv::Mat show;
-    if (detections.empty()) {
+    std::string win = "Cam tag test";
 
-      show = frame;
+    TagDetectorParams& params = opts.params;
+    TagDetector detector(family, params);
 
-    } else {
+    //Estatiates the TagDetectionArray 
+    TagDetectionArray detections;
 
-      //show = family.superimposeDetections(frame, detections);
-      show = frame;
+    int cvPose = 0;
 
-      double s = opts.tag_size;
-      double ss = 0.5*s;
-      double sz = s;
+    while (1) {
 
-      enum { npoints = 8, nedges = 12 };
+        //openCV class assinded to camera array for detections 
+        vc >> frame;
+        if (frame.empty()) { break; }
 
-      cv::Point3d src[npoints] = {
-        cv::Point3d(-ss, -ss, 0),
-        cv::Point3d( ss, -ss, 0),
-        cv::Point3d( ss,  ss, 0),
-        cv::Point3d(-ss,  ss, 0),
-        cv::Point3d(-ss, -ss, sz),
-        cv::Point3d( ss, -ss, sz),
-        cv::Point3d( ss,  ss, sz),
-        cv::Point3d(-ss,  ss, sz),
-      };
+        //proccess the frame for apriltags
+        detector.process(frame, opticalCenter, detections);
 
-      int edges[nedges][2] = {
-
-        { 0, 1 },
-        { 1, 2 },
-        { 2, 3 },
-        { 3, 0 },
-
-        { 4, 5 },
-        { 5, 6 },
-        { 6, 7 },
-        { 7, 4 },
-
-        { 0, 4 },
-        { 1, 5 },
-        { 2, 6 },
-        { 3, 7 }
-
-      };
-
-      cv::Point2d dst[npoints];
-
-      double f = opts.focal_length;
-
-      double K[9] = {
-        f, 0, opticalCenter.x,
-        0, f, opticalCenter.y,
-        0, 0, 1
-      };
-
-      cv::Mat_<cv::Point3d> srcmat(npoints, 1, src);
-      cv::Mat_<cv::Point2d> dstmat(npoints, 1, dst);
-
-      cv::Mat_<double>      Kmat(3, 3, K);
-
-      cv::Mat_<double>      distCoeffs = cv::Mat_<double>::zeros(4,1);
-
-      for (size_t i=0; i<detections.size(); ++i) {
-
-        //for (cvPose=0; cvPose<2; ++cvPose) {
-        if (1) {
-
-          cv::Mat r, t;
-
-          if (cvPose) {
-
-
-            CameraUtil::homographyToPoseCV(f, f, s, 
-                                           detections[i].homography,
-                                           r, t);
-
-          } else {
-
-            cv::Mat_<double> M = 
-              CameraUtil::homographyToPose(f, f, s, 
-                                           detections[i].homography,
-                                           false);
-
-            cv::Mat_<double> R = M.rowRange(0,3).colRange(0, 3);
-          
-            t = M.rowRange(0,3).col(3);
-
-            cv::Rodrigues(R, r);
-
-          }
-
-          cv::projectPoints(srcmat, r, t, Kmat, distCoeffs, dstmat);
-
-          for (int j=0; j<nedges; ++j) {
-            cv::line(show, 
-                     dstmat(edges[j][0],0),
-                     dstmat(edges[j][1],0),
-                     cvPose ? CV_RGB(0,255,0) : CV_RGB(255,0,0),
-                     1, CV_AA);
-          }
+        cv::Mat show;
+        if (detections.empty()) {
+            show = frame;
 
         }
+        else {
 
-      }
-                                                          
+            //if aprilTag is detected 
+            show = frame;
 
+            //add
+            double s = opts.tag_size;
+            double ss = 0.5 * s;
+            double sz = s;
+
+            enum { npoints = 8, nedges = 12 };
+
+            cv::Point3d src[npoints] = {
+              cv::Point3d(-ss, -ss, 0),
+              cv::Point3d(ss, -ss, 0),
+              cv::Point3d(ss,  ss, 0),
+              cv::Point3d(-ss,  ss, 0),
+              cv::Point3d(-ss, -ss, sz),
+              cv::Point3d(ss, -ss, sz),
+              cv::Point3d(ss,  ss, sz),
+              cv::Point3d(-ss,  ss, sz),
+            };
+
+            int edges[nedges][2] = {
+
+              { 0, 1 },
+              { 1, 2 },
+              { 2, 3 },
+              { 3, 0 },
+
+              { 4, 5 },
+              { 5, 6 },
+              { 6, 7 },
+              { 7, 4 },
+
+              { 0, 4 },
+              { 1, 5 },
+              { 2, 6 },
+              { 3, 7 }
+
+            };
+
+            //end add 
+            cv::Point2d dst[npoints];
+
+            //defining focal points
+            double f = opts.focal_length;
+
+            //creating 3x3 homography matrix in reference of opticalCenters 
+            double K[9] = {
+              f, 0, opticalCenter.x,
+              0, f, opticalCenter.y,
+              0, 0, 1
+            };
+
+            cv::Mat_<cv::Point3d> srcmat(npoints, 1, src);
+            cv::Mat_<cv::Point2d> dstmat(npoints, 1, dst);
+
+            cv::Mat_<double>      Kmat(3, 3, K);
+
+            //distortion coefficent 
+            cv::Mat_<double>      distCoeffs = cv::Mat_<double>::zeros(4, 1);
+
+            //running through detections array for all instaces of apriltags
+            for (size_t i = 0; i < detections.size(); ++i) {
+                if (1) {
+                    //rotation and traslation vectors 
+                    cv::Mat r, t;
+
+                    if (cvPose) {
+                        /**
+                        * flip the homography along the Y axis to align the
+                        * conventional image coordinate system (y=0 at the top) with
+                        * the conventional camera coordinate system (y=0 at the bottom).
+                        * f = focalpoint, s = tagSize, r = rotiation vector, t = traslation vector
+                        **/
+
+                        CameraUtil::homographyToPoseCV(f, f, s, detections[i].homography, r, t);
+
+                    }
+                    else {
+
+                        cv::Mat_<double> M = CameraUtil::homographyToPose(f, f, s, detections[i].homography, false);
+
+                        cv::Mat_<double> R = M.rowRange(0, 3).colRange(0, 3);
+
+                        t = M.rowRange(0, 3).col(3);
+
+                        //coverts a rotation matrix to a rotation vector
+                        cv::Rodrigues(R, r);
+                    }
+
+                    //Project 3D points to an image Plane 
+                    cv::projectPoints(srcmat, r, t, Kmat, distCoeffs, dstmat);
+
+                    //displaying the apriltage relitive to camera 
+                    for (int j = 0; j < nedges; ++j) {
+                        cv::line(show,
+                            dstmat(edges[j][0], 0),
+                            dstmat(edges[j][1], 0),
+                            cvPose ? CV_RGB(0, 255, 0) : CV_RGB(255, 0, 0),
+                            1, CV_AA);
+
+                    }
+                }
+            }
+        }
+
+        if (opts.mirror_display) {
+            cv::flip(show, show, 1);
+        }
+
+        cv::imshow(win, show);
+        int k = cv::waitKey(5);
+        if (k % 256 == 's') {
+            cv::imwrite("frame.png", frame);
+            std::cout << "wrote frame.png\n";
+        }
+        else if (k % 256 == 'p') {
+            cvPose = !cvPose;
+        }
+        else if (k % 256 == 27 /* ESC */) {
+            break;
+        }
     }
 
-    if (opts.mirror_display) {
-      cv::flip(show, show, 1);
-    }
+    detector.reportTimers();
 
-    cv::imshow(win, show);
-    int k = cv::waitKey(5);
-    if (k % 256 == 's') {
-      cv::imwrite("frame.png", frame);
-      std::cout << "wrote frame.png\n";
-    } else if (k % 256 == 'p') {
-      cvPose = !cvPose;
-    } else if (k % 256 == 27 /* ESC */) {
-      break;
-    }
-
-  }    
-
-  detector.reportTimers();
-
-  return 0;
-
-
+    return 0;
 }
+
