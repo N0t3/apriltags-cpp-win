@@ -35,7 +35,7 @@ typedef struct CamTestOptions {
         error_fraction(1),
         device_num(0),
         focal_length(500),
-        tag_size(0.1905),
+        tag_size(.475),
         frame_width(0),
         frame_height(0),
         mirror_display(true)
@@ -303,7 +303,12 @@ int main(int argc, char** argv) {
                         t = M.rowRange(0, 3).col(3);
 
                         //coverts a rotation matrix to a rotation vector
-                        cv::Rodrigues(R, r);                     
+                        cv::Rodrigues(R, r);
+
+                        std::cout << getX(M, opts.tag_size);
+                        std::cout << getY(M, opts.tag_size);
+                        std::cout << getZ(M, opts.tag_size);
+                        
                     }
 
                     //Project 3D points to an image Plane 
@@ -316,7 +321,6 @@ int main(int argc, char** argv) {
                             dstmat(edges[j][1], 0),
                             cvPose ? CV_RGB(0, 255, 0) : CV_RGB(255, 0, 0),
                             1, CV_AA);
-
                     }
                 }
             }

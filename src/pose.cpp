@@ -16,18 +16,18 @@
 
  
  //returns the supposed X value by inputing the traslation vector
- cv::Mat_<double> getX(cv::Mat_<double> vector) {
-     return vector.row(0).col(3);
+ cv::Mat_<double> getX(cv::Mat_<double> vector, double tagSize) {
+     return vector.row(2).col(3) * tagSize/2;
  }
 
  //returns the supposed Y value by inputing the traslation vector
- cv::Mat_<double> getY(cv::Mat_<double> vector) {
-     return vector.row(1).col(3);
+ cv::Mat_<double> getY(cv::Mat_<double> vector, double tagSize) {
+     return vector.row(1).col(3) * tagSize / 2;
  }
 
 
  //returns the supposed Y value by inputing the traslation vector
- cv::Mat_<double> getZ(cv::Mat_<double> vector) {
-     return vector.row(2).col(3);
+ cv::Mat_<double> getZ(cv::Mat_<double> vector, double tagSize) {
+     return vector.row(0).col(3) * tagSize / 2;
  }
  
