@@ -24,6 +24,7 @@
 #include <opencv2/videoio.hpp>
 
 #include "CameraUtil.h"
+#include "pose.h"
 
 #define DEFAULT_TAG_FAMILY "Tag36h11"
 
@@ -302,7 +303,7 @@ int main(int argc, char** argv) {
                         t = M.rowRange(0, 3).col(3);
 
                         //coverts a rotation matrix to a rotation vector
-                        cv::Rodrigues(R, r);
+                        cv::Rodrigues(R, r);                     
                     }
 
                     //Project 3D points to an image Plane 
