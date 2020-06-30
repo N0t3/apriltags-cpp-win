@@ -161,7 +161,6 @@ int main(int argc, char** argv) {
     //Opens Camera for video dections and creates new object to start parseing image files  
     vc.open(opts.device_num);
 
-    //gets both the frame width and frame height through camera 
     if (opts.frame_width && opts.frame_height) {
 
         // Use uvcdynctrl to figure this out dynamically at some point?
@@ -304,11 +303,6 @@ int main(int argc, char** argv) {
 
                         //coverts a rotation matrix to a rotation vector
                         cv::Rodrigues(R, r);
-
-                        std::cout << getX(M, opts.tag_size);
-                        std::cout << getY(M, opts.tag_size);
-                        std::cout << getZ(M, opts.tag_size);
-                        
                     }
 
                     //Project 3D points to an image Plane 

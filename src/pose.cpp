@@ -12,22 +12,42 @@
 #include <stdio.h>
 #include "CameraUtil.h"
 #include <pose.h>
+#include <cmath>
 
 
- 
  //returns the supposed X value by inputing the traslation vector
- cv::Mat_<double> getX(cv::Mat_<double> vector, double tagSize) {
-     return vector.row(2).col(3) * tagSize/2;
+ double getX(cv::Mat_<double> vector, double tagSize) {
+     return vector[2][3] * tagSize / 2;
  }
 
  //returns the supposed Y value by inputing the traslation vector
- cv::Mat_<double> getY(cv::Mat_<double> vector, double tagSize) {
-     return vector.row(1).col(3) * tagSize / 2;
+ double getY(cv::Mat_<double> vector, double tagSize) {
+     return vector[1][3] * tagSize / 2;
  }
 
-
  //returns the supposed Y value by inputing the traslation vector
- cv::Mat_<double> getZ(cv::Mat_<double> vector, double tagSize) {
-     return vector.row(0).col(3) * tagSize / 2;
+ double getZ(cv::Mat_<double> vector, double tagSize) {
+     return vector[0][3] * tagSize / 2;
  }
  
+
+//returns the Yaw of the camera 
+double getYaw(cv::Mat_<double> vector) {
+    return atan(vector[1][0]/vector[0][0]);
+ }
+
+//returns the Pitch of the camera 
+double getPitch(cv::Mat_<double> vector) {
+    return atan(-vector[0][2]/ 
+        sqrt(pow(vector[2][1], 2.0) + 
+        pow(vector[2][2], 2.0)));
+}
+
+
+//returns the Roll of the camera 
+double getRoll(cv::Mat_<double> vector) {
+    return atan(vector[2][1]/vector[2][2]);
+}
+
+
+
