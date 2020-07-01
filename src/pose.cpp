@@ -38,7 +38,7 @@ double getYaw(cv::Mat_<double> vector) {
 
 //returns the Pitch of the camera 
 double getPitch(cv::Mat_<double> vector) {
-    return atan(-vector[0][2]/ 
+    return atan(-vector[2][0]/ 
         sqrt(pow(vector[2][1], 2.0) + 
         pow(vector[2][2], 2.0)));
 }
