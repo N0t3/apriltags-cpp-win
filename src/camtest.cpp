@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <getopt.h>
 #include "Geometry.h"
+//#include <unistd.h>
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
@@ -301,9 +302,17 @@ int main(int argc, char** argv) {
                         cv::Mat_<double> R = M.rowRange(0, 3).colRange(0, 3);
 
                         t = M.rowRange(0, 3).col(3);
-
+                   // std::cout<< M[0][1];
                         //coverts a rotation matrix to a rotation vector
-                        cv::Rodrigues(R, r);                     
+                        cv::Rodrigues(R, r);         
+                        //std :: cout << t;
+                       // sleep_for(nanoseconds(10));
+                     //  getX(M);
+                      // getY(M);
+                     //  getZ(M);
+                      //  getYaw(M);
+                       // getPitch(M);
+                      //  getRoll(M);
                     }
 
                     //Project 3D points to an image Plane 
