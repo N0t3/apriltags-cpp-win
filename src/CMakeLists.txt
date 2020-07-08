@@ -12,7 +12,7 @@ add_library(apriltags ${INC_LIST} CameraUtil.cpp
   TagFamily.cpp
   TagFamilies.cpp
   UnionFindSimple.cpp
-  getopt.cpp "pose.cpp" "pose.h")
+  getopt.cpp "pose.cpp" "pose.h" "TagBundles.cpp" "TagBundles.h")
 
 set(AT_LIBS apriltags ${OpenCV_LIBS})
 
