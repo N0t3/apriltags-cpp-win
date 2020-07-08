@@ -35,7 +35,7 @@ typedef struct CamTestOptions {
         error_fraction(1),
         device_num(0),
         focal_length(500),
-        tag_size(.475),
+        tag_size(0.095000064),
         frame_width(0),
         frame_height(0),
         mirror_display(true)
@@ -298,6 +298,9 @@ int main(int argc, char** argv) {
                         cv::Mat_<double> M = CameraUtil::homographyToPose(f, f, s, detections[i].homography, false);
 
                         cv::Mat_<double> R = M.rowRange(0, 3).colRange(0, 3);
+
+                        std::cout<<getX(M,opts.tag_size);
+                        
 
                         t = M.rowRange(0, 3).col(3);
 
